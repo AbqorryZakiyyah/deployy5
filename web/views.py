@@ -166,7 +166,8 @@ def adddiary():
                 sentiments = ['Anxiety', 'Depresi', 'Lonely', 'Normal']
                 predicted_sentiment = sentiments[sentiment_index]
                 sentiment_percentage = round(sentiment_probability * 100, 2)
-                prediction_text = f"{sentiment_percentage}% ({predicted_sentiment})"
+                prediction_text = f"{sentiment_percentage:.2f}% ({predicted_sentiment})"
+
 
             def recommendation(sentence, csv_url):
                 # Membaca file CSV dari URL
@@ -206,6 +207,7 @@ def adddiary():
             flash('Diary added!', category='success')
             
             return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': prediction_text, 'recommendation': rekom}), 200
+
 
     #return render_template("home.html", user=current_user)
 
