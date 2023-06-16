@@ -147,11 +147,6 @@ def adddiary():
             # Cek hasil preprosessing
             print(preprocessed_text)
 
-
-            anxiety = 0
-            depresi = 0
-            lonely = 0
-            normal = 0
             # Prediksi menggunakan model dan tokenizer yang dimuat
             def predict_text_sentiment(seed_text, model, tokenizer):
                 token_list = tokenizer.texts_to_sequences([seed_text])[0]
@@ -164,16 +159,14 @@ def adddiary():
                 #print('Depresi : {:.2%}'.format(predicted[1]))
                 #print('Lonely : {:.2%}'.format(predicted[2]))
                 #print('Normal : {:.2%}'.format(predicted[3]))
-                #return predicted
-                 # Assign the predicted values to respective variables
-                sentiments = ['Anxiety','Depresi','Lonely','Normal']
-                return sentiments[predicted.index(max(predicted))], max(predicted)
+                return predicted
 
             # Menjalankan prediksi menggunakan model
-                predicted_sentiment, sentiment_probability = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
-                sentiment_percentage = round(sentiment_probability * 100, 2)
-                prediction_text = f"{sentiment_percentage:.2f}% ({predicted_sentiment})"
-
+            predict=predict_text_sentiment(preprocessed_text, new_model, tokenizer)
+            anxiety=predict[0]
+            depresi=predict[1]
+            lonely=predict[2]
+            normal=predict[3]
 
             def recommendation(sentence, csv_url):
                 # Membaca file CSV dari URL
@@ -205,15 +198,12 @@ def adddiary():
             #Mendapatkan rekomendasi quote
             rekom=recommendation(preprocessed_text, csv_url)
 
-            new_diary = Diary(data=diary, Anxiety=anxiety, Depresi=depresi, Lonely=lonely, Normal=normal, rekomendasi=rekom)
-            #datapredict=np.array(predict)
-            #predict_list=datapredict.tolist()
+            new_diary = Diary(data=diary, Anxiety=anxiety*100, Depresi=depresi*100, Lonely=lonely*100, Normal=normal*100, rekomendasi=rekom)
+            datapredict=np.array(predict)
+            predict_list=datapredict.tolist()
             db.session.add(new_diary) 
             db.session.commit()
             flash('Diary added!', category='success')
-            
-            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': prediction_text, 'recommendation': rekom}), 200
-
+            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': predict_list, 'recommendation': rekom}), 200
 
     #return render_template("home.html", user=current_user)
-
