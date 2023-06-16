@@ -162,11 +162,11 @@ def adddiary():
                 return predicted
 
             # Menjalankan prediksi menggunakan model
-            predict=predict_text_sentiment(preprocessed_text, new_model, tokenizer)
-            anxiety=predict[0]
-            depresi=predict[1]
-            lonely=predict[2]
-            normal=predict[3]
+                sentiment_index, sentiment_probability = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
+                sentiments = ['Anxiety', 'Depresi', 'Lonely', 'Normal']
+                predicted_sentiment = sentiments[sentiment_index]
+                sentiment_percentage = round(sentiment_probability * 100, 2)
+                prediction_text = f"{sentiment_percentage}% ({predicted_sentiment})"
 
             def recommendation(sentence, csv_url):
                 # Membaca file CSV dari URL
@@ -198,13 +198,14 @@ def adddiary():
             #Mendapatkan rekomendasi quote
             rekom=recommendation(preprocessed_text, csv_url)
 
-            new_diary = Diary(data=diary, Anxiety=anxiety*100, Depresi=depresi*100, Lonely=lonely*100, Normal=normal*100, rekomendasi=rekom)
+            new_diary = Diary(data=diary, Anxiety=sentiment_percentage, Depresi=depresi, Lonely=lonely, Normal=normal, rekomendasi=rekom)
             datapredict=np.array(predict)
             predict_list=datapredict.tolist()
             db.session.add(new_diary) 
             db.session.commit()
             flash('Diary added!', category='success')
-            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': predict_list, 'recommendation': rekom}), 200
+            
+            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': prediction_text, 'recommendation': rekom}), 200
 
     #return render_template("home.html", user=current_user)
 
