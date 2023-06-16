@@ -147,6 +147,11 @@ def adddiary():
             # Cek hasil preprosessing
             print(preprocessed_text)
 
+
+            anxiety = 0
+            depresi = 0
+            lonely = 0
+            normal = 0
             # Prediksi menggunakan model dan tokenizer yang dimuat
             def predict_text_sentiment(seed_text, model, tokenizer):
                 token_list = tokenizer.texts_to_sequences([seed_text])[0]
