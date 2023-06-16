@@ -198,7 +198,7 @@ def adddiary():
             #Mendapatkan rekomendasi quote
             rekom=recommendation(preprocessed_text, csv_url)
 
-            new_diary = Diary(data=diary, Anxiety=sentiment_percentage, Depresi=depresi, Lonely=lonely, Normal=normal, rekomendasi=rekom)
+            new_diary = Diary(data=diary, Anxiety=anxiety, Depresi=depresi, Lonely=lonely, Normal=normal, rekomendasi=rekom)
             datapredict=np.array(predict)
             predict_list=datapredict.tolist()
             db.session.add(new_diary) 
