@@ -201,9 +201,16 @@ def adddiary():
             new_diary = Diary(data=diary, Anxiety=anxiety*100, Depresi=depresi*100, Lonely=lonely*100, Normal=normal*100, rekomendasi=rekom)
             datapredict=np.array(predict)
             predict_list=datapredict.tolist()
+            
+            #Mencari maks probability
+            maks = max(predict_list)
+            sentiments = ['Anxiety','Depresi','Lonely','Normal']
+            predicted_sentiment =sentiments[predict_list.index(max(predict_list))]
+            prediction_text = f"{maks:.2f}% ({predicted_sentiment})"
             db.session.add(new_diary) 
             db.session.commit()
+            
             flash('Diary added!', category='success')
-            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': predict_list, 'recommendation': rekom}), 200
+            return jsonify({'status': 'success', 'diary': diary, 'hasil_predict': prediction_text, 'recommendation': rekom}), 200
 
     #return render_template("home.html", user=current_user)
