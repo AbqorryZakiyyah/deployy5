@@ -166,16 +166,11 @@ def adddiary():
                 #print('Normal : {:.2%}'.format(predicted[3]))
                 #return predicted
                  # Assign the predicted values to respective variables
-                anxiety = predicted[0]
-                depresi = predicted[1]
-                lonely = predicted[2]
-                normal = predicted[3]
-                return anxiety, depresi, lonely, normal
+                sentiments = ['Anxiety','Depresi','Lonely','Normal']
+                return sentiments[predicted.index(max(predicted))], max(predicted)
 
             # Menjalankan prediksi menggunakan model
-                anxiety, depresi, lonely, normal = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
-                sentiments = ['Anxiety', 'Depresi', 'Lonely', 'Normal']
-                predicted_sentiment = sentiments[sentiment_index]
+                predicted_sentiment, sentiment_probability = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
                 sentiment_percentage = round(sentiment_probability * 100, 2)
                 prediction_text = f"{sentiment_percentage:.2f}% ({predicted_sentiment})"
 
