@@ -159,10 +159,16 @@ def adddiary():
                 #print('Depresi : {:.2%}'.format(predicted[1]))
                 #print('Lonely : {:.2%}'.format(predicted[2]))
                 #print('Normal : {:.2%}'.format(predicted[3]))
-                return predicted
+                #return predicted
+                 # Assign the predicted values to respective variables
+                anxiety = predicted[0]
+                depresi = predicted[1]
+                lonely = predicted[2]
+                normal = predicted[3]
+                return anxiety, depresi, lonely, normal
 
             # Menjalankan prediksi menggunakan model
-                sentiment_index, sentiment_probability = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
+                anxiety, depresi, lonely, normal = predict_text_sentiment(preprocessed_text, new_model, tokenizer)
                 sentiments = ['Anxiety', 'Depresi', 'Lonely', 'Normal']
                 predicted_sentiment = sentiments[sentiment_index]
                 sentiment_percentage = round(sentiment_probability * 100, 2)
@@ -200,8 +206,8 @@ def adddiary():
             rekom=recommendation(preprocessed_text, csv_url)
 
             new_diary = Diary(data=diary, Anxiety=anxiety, Depresi=depresi, Lonely=lonely, Normal=normal, rekomendasi=rekom)
-            datapredict=np.array(predict)
-            predict_list=datapredict.tolist()
+            #datapredict=np.array(predict)
+            #predict_list=datapredict.tolist()
             db.session.add(new_diary) 
             db.session.commit()
             flash('Diary added!', category='success')
